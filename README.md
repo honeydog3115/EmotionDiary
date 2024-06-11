@@ -21,13 +21,15 @@ flask/에서 실행
 python main.py
 ```
 ## react
-react/에서 실행
+리액트의 구동은 아래 내용을 따라 주세요.
 ### 의존성 패키지 설치 및 실행
+react/에서 실행
 ```
 npm install
 npm start
 ```
 ## Docker
+Docker의 구동은 아래 내용을 따라 주세요.
 ### docker-compse
 루트에서 실행
 ```
