@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  emotion_diary_mysql:
+    build: ./mysql
+    image: honeydog/emotion_diary_mysql:test
+    volumes:
+      - emotion_diary_mysql_volume:/var/lib/mysql
+      - "./mysql/:/docker-entrypoint-initdb.d/"
+    networks:
+      - emotion_diary_network2
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 10s
+      retries: 100
+      start_period: 5s
+
+  emotion_diary_flask:
+    build: ./flask_server
+    image: honeydog/emotion_diary_flask:test
+    ports:
+     - "5000:5000"
+    networks:
+     - emotion_diary_network2
+    depends_on:
+      emotion_diary_mysql:
+        condition: service_healthy
+  
+  emotion_diary_react:
+    build: ./react
+    image: honeydog/emotion_diary_react:test
+    ports:
+      - "3000:3000"
+    networks:
+      - emotion_diary_network2
+    depends_on:
+      - emotion_diary_flask
+
+networks:
+  emotion_diary_network2:
+
+volumes:
+  emotion_diary_mysql_volume:
